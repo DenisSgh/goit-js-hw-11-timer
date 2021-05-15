@@ -59,5 +59,5 @@ class CountdownTimer {
 
 new CountdownTimer({
   selector: '#timer-1',
-  targetDate: new Date('May 15, 2021 17:21'),
+  targetDate: new Date('Jun 15, 2021'),
 });
