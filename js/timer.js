@@ -1,28 +1,44 @@
-const refs = {
-  days: document.querySelector('span[data-value="days"]'),
-  hours: document.querySelector('span[data-value="hours"]'),
-  mins: document.querySelector('span[data-value="mins"]'),
-  secs: document.querySelector('span[data-value="secs"]'),
-};
-
 class CountdownTimer {
   DELAY = 1000;
 
   constructor({ selector, targetDate }) {
     this.selector = selector;
     this.targetDate = targetDate;
+    this.intervalId = null;
 
     this.start();
   }
 
   start() {
-    setInterval(() => {
-      const currentTime = Date.now();
-      const deltaTime = this.targetDate - currentTime;
+    this.intervalId = setInterval(() => {
+      const deltaTime = this.targetDate - Date.now();
+
+      if (deltaTime < 0) {
+        clearInterval(this.intervalId);
+        return;
+      }
+
       const time = this.getTimeComponents(deltaTime);
 
       this.updateTimer(time);
     }, this.DELAY);
+  }
+
+  updateTimer({ days, hours, mins, secs }) {
+    const container = document.querySelector(this.selector);
+    const refs = {
+      days: container.querySelector('[data-value="days"]'),
+      hours: container.querySelector('[data-value="hours"]'),
+      mins: container.querySelector('[data-value="mins"]'),
+      secs: container.querySelector('[data-value="secs"]'),
+    };
+
+    refs.days.textContent = days;
+    refs.hours.textContent = hours;
+    refs.mins.textContent = mins;
+    refs.secs.textContent = secs;
+
+    return;
   }
 
   getTimeComponents(time) {
@@ -36,13 +52,6 @@ class CountdownTimer {
     return { days, hours, mins, secs };
   }
 
-  updateTimer({ days, hours, mins, secs }) {
-    refs.days.textContent = `${days}`;
-    refs.hours.textContent = `${hours}`;
-    refs.mins.textContent = `${mins}`;
-    refs.secs.textContent = `${secs}`;
-  }
-
   pad(value) {
     return String(value).padStart(2, '0');
   }
@@ -50,5 +59,5 @@ class CountdownTimer {
 
 new CountdownTimer({
   selector: '#timer-1',
-  targetDate: new Date('Jul 17, 2021'),
+  targetDate: new Date('May 15, 2021 17:21'),
 });
